@@ -21,6 +21,8 @@ test.describe('Tests for restaurant menu - search dishes', () => {
         expect(placeholderValue).toBe('Назва страви');
         await searchIcon.click();
         await expect(searchBlock).toBeFocused();
+
+        await expect(page).toHaveScreenshot();
     });
 
     test('Check search-warning - need more symbols', async ({ page }) => {
@@ -31,6 +33,18 @@ test.describe('Tests for restaurant menu - search dishes', () => {
         
         await searchIcon.click();
         await searchIcon.fill('T');
+        await expect(searchWarning).toBeVisible();
+        await expect(searchWarning).toHaveText('Введіть мінімум 2 символи');
+    });
+
+    test('Check search-warning - NOT need more symbols', async ({ page }) => {
+        const searchIcon = await page.locator('label').getByRole('img');
+        const searchWarning = await page.locator('//*[@class="search-warning"]');
+
+        await expect(searchWarning).toBeHidden();
+        
+        await searchIcon.click();
+        await searchIcon.fill('Tt');
         await expect(searchWarning).toBeVisible();
         await expect(searchWarning).toHaveText('Введіть мінімум 2 символи');
     });
